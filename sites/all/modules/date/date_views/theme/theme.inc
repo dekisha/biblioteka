@@ -165,15 +165,22 @@ function theme_date_nav_title($params) {
   $date_info = $view->date_info;
   $link = !empty($params['link']) ? $params['link'] : FALSE;
   $format = !empty($params['format']) ? $params['format'] : NULL;
-  $format_with_year = variable_get('date_views_' . $granularity . 'format_with_year', 'l, F j, Y');
-  $format_without_year = variable_get('date_views_' . $granularity . 'format_without_year', 'l, F j');
+  
+  if ($granularity == 'year') {
+    $format_with_year = 'Y';
+    $format_without_year = 'Y';
+  }
+  else {
+    $format_with_year = variable_get('date_views_' . $granularity . '_format_with_year', 'l, F j, Y');
+    $format_without_year = variable_get('date_views_' . $granularity . '_format_without_year', 'l, F j');
+  }
   switch ($granularity) {
     case 'year':
       $title = $date_info->year;
       $date_arg = $date_info->year;
       break;
     case 'month':
-      $format = !empty($format) ? $format : (empty($date_info->mini) ? $format_with_year : $format_without_year);
+      $format = !empty($format) ? $format : (empty($date_info->mini) ? $format_with_year : $format_with_year);
       $title = date_format_date($date_info->min_date, 'custom', $format);
       $date_arg = $date_info->year . '-' . date_pad($date_info->month);
       break;
